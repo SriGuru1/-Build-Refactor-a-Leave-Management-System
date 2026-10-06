@@ -4,6 +4,7 @@ package leavemgmt;
 public class Intern extends Employee {
 
     public static final int ANNUAL_ENTITLEMENT = 6;
+    public static final int CARRY_FORWARD_LIMIT = 0;
     public static final int MAX_DAYS_PER_REQUEST = 2;
 
     public Intern(String employeeId, String name, String department) {
@@ -18,6 +19,11 @@ public class Intern extends Employee {
             return false;
         }
         return super.applyLeave(days, reason);
+    }
+
+    @Override
+    public int getCarryForwardLimit() {
+        return CARRY_FORWARD_LIMIT;
     }
 
     @Override

@@ -1,10 +1,12 @@
 package leavemgmt;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Base class: shared data and the leave workflow. Subclasses add their own rules. */
-public class Employee {
+/** Abstract base class: shared data and workflow. Each employee type supplies its own carry-forward rule. */
+public abstract class Employee {
 
     private String employeeId;
     private String name;
@@ -41,6 +43,36 @@ public class Employee {
         history.add(request);
         System.out.println(name + ": request " + request + " approved. Balance = " + leaveBalance);
         return true;
+    }
+
+    /** Overload 1: no reason given. */
+    public boolean applyLeave(int days) {
+        return applyLeave(days, "Personal leave");
+    }
+
+    /** Overload 2: from/to dates; only Monday-Friday are counted. */
+    public boolean applyLeave(LocalDate from, LocalDate to, String reason) {
+        if (from == null || to == null || to.isBefore(from)) {
+            System.out.println(name + ": invalid date range.");
+            return false;
+        }
+        int days = 0;
+        for (LocalDate d = from; !d.isAfter(to); d = d.plusDays(1)) {
+            if (d.getDayOfWeek() != DayOfWeek.SATURDAY && d.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                days++;
+            }
+        }
+        return applyLeave(days, reason);
+    }
+
+    /** Carry-forward limit differs for every employee type, so each subclass decides. */
+    public abstract int getCarryForwardLimit();
+
+    /** New leave year: fresh entitlement plus carried-forward days (up to the type's limit). */
+    public void startNewLeaveYear() {
+        int carried = Math.min(leaveBalance, getCarryForwardLimit());
+        leaveBalance = annualEntitlement + carried;
+        System.out.println(name + ": new leave year. Carried forward " + carried + " day(s). Balance = " + leaveBalance);
     }
 
     public boolean cancelLeave(int requestId) {

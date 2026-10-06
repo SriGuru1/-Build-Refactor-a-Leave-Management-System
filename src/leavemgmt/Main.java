@@ -1,22 +1,30 @@
 package leavemgmt;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-        Employee a = new FullTimeEmployee("E101", "Asha Rao", "Engineering");
-        Employee b = new PartTimeEmployee("E102", "Ravi Kumar", "Finance");
-        Employee c = new Intern("E103", "Meera Nair", "HR");
+        // Polymorphism: one list, three different kinds of employee
+        List<Employee> staff = new ArrayList<>();
+        staff.add(new FullTimeEmployee("E101", "Asha Rao", "Engineering"));
+        staff.add(new PartTimeEmployee("E102", "Ravi Kumar", "Finance"));
+        staff.add(new Intern("E103", "Meera Nair", "HR"));
 
-        a.displayDetails();
-        b.displayDetails();
-        c.displayDetails();
+        for (Employee e : staff) {
+            e.displayDetails();                 // overridden in every subclass
+        }
+        for (Employee e : staff) {
+            e.applyLeave(3);                    // overload 1 (days only)
+        }
+        // overload 2: Fri 2026-10-09 to Tue 2026-10-13 = Fri, Mon, Tue = 3 working days
+        staff.get(0).applyLeave(LocalDate.of(2026, 10, 9), LocalDate.of(2026, 10, 13), "Festival");
+        // weekend only -> 0 working days -> rejected
+        staff.get(0).applyLeave(LocalDate.of(2026, 10, 10), LocalDate.of(2026, 10, 11), "Weekend");
 
-        a.applyLeave(8, "Family function");
-        a.applyLeave(11, "Long trip");      // full-time max is 10
-        b.applyLeave(6, "Exam");            // part-time max is 5
-        c.applyLeave(3, "Workshop");        // intern max is 2
-        c.applyLeave(2, "Workshop");
-        c.applyLeave(2, "Fever");
-        c.applyLeave(2, "Fever");
-        c.applyLeave(1, "Fever");           // balance exhausted
+        for (Employee e : staff) {
+            e.startNewLeaveYear();              // carry-forward rule differs by type
+        }
     }
 }
