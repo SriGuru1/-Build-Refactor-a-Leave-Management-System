@@ -6,11 +6,16 @@ public class Main {
         Employee b = new Employee("E102", "Ravi Kumar", "Finance");
         Employee c = new Employee("E103", "Meera Nair", "HR");
 
+        a.applyLeave(5, "Family function");
+        a.applyLeave(3, "Medical");
+        b.applyLeave(25, "Long trip");     // more than balance
+        c.applyLeave(2, "   ");            // blank reason
+        a.cancelLeave(1);
+        a.cancelLeave(1);                  // already cancelled
+        a.cancelLeave(9);                  // does not exist
+        for (LeaveRequest r : a.getHistory()) {
+            System.out.println("  " + r);
+        }
         a.displayDetails();
-        a.applyLeave(5);
-        b.applyLeave(25);   // more than balance -> rejected
-        c.applyLeave(0);    // invalid -> rejected
-        a.cancelLeave(2);
-        System.out.println("Asha's balance: " + a.checkLeaveBalance());
     }
 }
