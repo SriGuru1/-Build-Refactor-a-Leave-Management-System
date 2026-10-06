@@ -8,17 +8,16 @@ public class FullTimeEmployee extends Employee {
     public static final int MAX_DAYS_PER_REQUEST = 10;
 
     public FullTimeEmployee(String employeeId, String name, String department) {
-        super(employeeId, name, department, ANNUAL_ENTITLEMENT, "Full-Time");
+        this(employeeId, name, department, 0, "Full-Time");
     }
 
-    @Override
-    public boolean applyLeave(int days, String reason) {
-        if (days > MAX_DAYS_PER_REQUEST) {
-            System.out.println(getName() + ": Full-time employees can take at most " + MAX_DAYS_PER_REQUEST
-                    + " days per request.");
-            return false;
-        }
-        return super.applyLeave(days, reason);
+    /** Protected: lets Manager reuse everything and only add a bonus. */
+    protected FullTimeEmployee(String employeeId, String name, String department, int bonusDays, String employeeType) {
+        super(employeeId, name, department, ANNUAL_ENTITLEMENT + bonusDays, employeeType);
+    }
+
+    protected int getMaxDaysPerRequest() {
+        return MAX_DAYS_PER_REQUEST;
     }
 
     @Override
@@ -27,9 +26,19 @@ public class FullTimeEmployee extends Employee {
     }
 
     @Override
+    public boolean applyLeave(int days, String reason) {
+        if (days > getMaxDaysPerRequest()) {
+            System.out.println(getName() + ": " + getEmployeeType() + " employees can take at most "
+                    + getMaxDaysPerRequest() + " days per request.");
+            return false;
+        }
+        return super.applyLeave(days, reason);
+    }
+
+    @Override
     public void displayDetails() {
         super.displayDetails();
-        System.out.println("   Rule: max " + MAX_DAYS_PER_REQUEST + " days per request, entitlement "
-                + ANNUAL_ENTITLEMENT + " days/year");
+        System.out.println("   Rule: max " + getMaxDaysPerRequest() + " days per request, entitlement "
+                + getAnnualEntitlement() + " days/year");
     }
 }
