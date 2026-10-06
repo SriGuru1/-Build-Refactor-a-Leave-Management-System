@@ -3,22 +3,24 @@ package leavemgmt;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Second version: requests are stored, so a leave can be cancelled exactly. */
+/** Base class: shared data and the leave workflow. Subclasses add their own rules. */
 public class Employee {
-
-    public static final int DEFAULT_ANNUAL_LEAVE = 20;
 
     private String employeeId;
     private String name;
     private String department;
     private int leaveBalance;
+    private int annualEntitlement;
+    private String employeeType;
     private List<LeaveRequest> history = new ArrayList<>();
 
-    public Employee(String employeeId, String name, String department) {
+    protected Employee(String employeeId, String name, String department, int annualEntitlement, String employeeType) {
         this.employeeId = employeeId;
         this.name = name;
         this.department = department;
-        this.leaveBalance = DEFAULT_ANNUAL_LEAVE;
+        this.annualEntitlement = annualEntitlement;
+        this.leaveBalance = annualEntitlement;
+        this.employeeType = employeeType;
     }
 
     public boolean applyLeave(int days, String reason) {
@@ -64,7 +66,7 @@ public class Employee {
 
     public void displayDetails() {
         System.out.println("ID: " + employeeId + " | Name: " + name + " | Dept: " + department
-                + " | Leave balance: " + leaveBalance);
+                + " | Type: " + employeeType + " | Leave balance: " + leaveBalance);
     }
 
     public List<LeaveRequest> getHistory() {
@@ -74,4 +76,6 @@ public class Employee {
     public String getEmployeeId() { return employeeId; }
     public String getName()       { return name; }
     public String getDepartment() { return department; }
+    public String getEmployeeType() { return employeeType; }
+    public int getAnnualEntitlement() { return annualEntitlement; }
 }
