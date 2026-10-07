@@ -1,0 +1,75 @@
+=========== Leave Management System - Automated Tests ===========
+
+--- A. Construction and validation ---
+[PASS] T01 Full-time starts with 24 days                              expected 24, got 24
+[PASS] T02 Part-time starts with 12 days                              expected 12, got 12
+[PASS] T03 Intern starts with 6 days                                  expected 6, got 6
+[PASS] T04 Manager starts with 30 days (24 + 6 bonus)                 expected 30, got 30
+[PASS] T05 Blank name rejected                                        threw IllegalArgumentException
+[PASS] T06 Null ID rejected                                           threw IllegalArgumentException
+[PASS] T07 Blank department rejected                                  threw IllegalArgumentException
+[PASS] T08 Name is trimmed                                            expected Neha, got Neha
+
+--- B. Rules differ by employee type (polymorphism) ---
+[PASS] T09 Full-time max per request = 10                             expected 10, got 10
+[PASS] T10 Part-time max per request = 5                              expected 5, got 5
+[PASS] T11 Intern max per request = 2                                 expected 2, got 2
+[PASS] T12 Manager max per request = 15                               expected 15, got 15
+[PASS] T13 Carry-forward limits (FT/PT/Intern/Mgr)                    expected 5/2/0/10, got 5/2/0/10
+[PASS] T14 Manager IS-A FullTimeEmployee (reuse by inheritance)       holds
+[PASS] T15 Manager details contain the benefit line                   holds
+[PASS] T16 Full-time details have no benefit line                     holds
+
+--- C. Boundary values ---
+[PASS] T17 Full-time: 10 days (= limit) accepted                      expected 14, got 14
+[PASS] T18 Full-time: 11 days (limit + 1) rejected                    threw InvalidLeaveRequestException
+[PASS] T19 Intern: balance can reach exactly 0                        expected 0, got 0
+[PASS] T20 Intern: 1 day with balance 0 rejected                      threw InsufficientLeaveBalanceException
+[PASS] T21 Manager: 15 days accepted (full-time limit would reject)   expected 15, got 15
+[PASS] T22 Rejected request leaves balance unchanged                  expected 2, got 2
+[PASS] T23 Rejected request is not stored in history                  expected 2, got 2
+
+--- D. Invalid input ---
+[PASS] T24 0 days rejected                                            threw InvalidLeaveRequestException
+[PASS] T25 Negative days rejected                                     threw InvalidLeaveRequestException
+[PASS] T26 Null reason rejected                                       threw InvalidLeaveRequestException
+[PASS] T27 Blank reason rejected                                      threw InvalidLeaveRequestException
+[PASS] T28 Exception reports shortfall (asked 4, had 2)               expected 2, got 2
+[PASS] T29 applyLeave(days) uses the default reason                   expected Personal leave, got Personal leave
+[PASS] T30 Reason is trimmed                                          expected Trip, got Trip
+[PASS] T31 Rejected requests consume no id; ids are sequential        expected 2, got 2
+
+--- E. Cancellation ---
+[PASS] T32 Cancel restores exactly the days taken                     expected 24, got 24
+[PASS] T33 Cancelled request has status CANCELLED                     expected CANCELLED, got CANCELLED
+[PASS] T34 Cancelling twice rejected                                  threw InvalidLeaveRequestException
+[PASS] T35 Cancelling unknown id rejected                             threw LeaveRequestNotFoundException
+[PASS] T36 Failed cancels did not change balance                      expected 24, got 24
+
+--- F. Date-range overload ---
+[PASS] T37 Fri 9 Oct to Tue 13 Oct 2026 = 3 working days              expected 3, got 3
+[PASS] T38 Single weekday = 1 day                                     expected 1, got 1
+[PASS] T39 Weekend-only range rejected                                threw InvalidLeaveRequestException
+[PASS] T40 End before start rejected                                  threw InvalidLeaveRequestException
+[PASS] T41 Null date rejected                                         threw InvalidLeaveRequestException
+[PASS] T42 Date range over the type limit rejected (Intern, 3 days)   threw InvalidLeaveRequestException
+
+--- G. New leave year ---
+[PASS] T43 Full-time carries forward capped at 5 (returned value)     expected 5, got 5
+[PASS] T44 Full-time new balance = 24 + 5                             expected 29, got 29
+[PASS] T45 Intern carries forward 0                                   expected 0, got 0
+[PASS] T46 Intern new balance = 6                                     expected 6, got 6
+[PASS] T47 Manager carries forward capped at 10                       expected 10, got 10
+[PASS] T48 Manager new balance = 30 + 10                              expected 40, got 40
+[PASS] T49 Part-time carries forward all 2 days (= cap)               expected 2, got 2
+[PASS] T50 BUG FIX: cancelling an old-year request is rejected        threw InvalidLeaveRequestException
+[PASS] T51 BUG FIX: balance stays at entitlement (6), not 8           expected 6, got 6
+[PASS] T52 Leave year counter increments                              expected 2, got 2
+
+--- H. Polymorphism and encapsulation ---
+[PASS] T53 Sum of max-days over mixed list (10+5+2+15)                expected 32, got 32
+[PASS] T54 History list is read-only                                  threw UnsupportedOperationException
+[PASS] T55 Balance changes only through applyLeave/cancelLeave        expected 21, got 21
+
+=================================================================
+RESULT: 55 of 55 tests passed.

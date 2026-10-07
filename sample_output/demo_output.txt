@@ -1,0 +1,56 @@
+
+=== 1. Employee details (overridden rules, same method call) ===
+ID: E101 | Name: Asha Rao | Dept: Engineering | Type: Full-Time | Leave balance: 24
+   Rule: max 10 days per request, entitlement 24 days/year, carry-forward up to 5 days
+ID: E102 | Name: Ravi Kumar | Dept: Finance | Type: Part-Time | Leave balance: 12
+   Rule: max 5 days per request, entitlement 12 days/year, carry-forward up to 2 days
+ID: E103 | Name: Meera Nair | Dept: HR | Type: Intern | Leave balance: 6
+   Rule: max 2 days per request, entitlement 6 days/year, carry-forward up to 0 days
+ID: E104 | Name: Kiran Das | Dept: Operations | Type: Manager | Leave balance: 30
+   Rule: max 15 days per request, entitlement 30 days/year, carry-forward up to 10 days
+   Manager benefit: +6 bonus days on top of the full-time entitlement
+
+=== 2. applyLeave(days) - same call, different rules per type ===
+  OK       Asha Rao   #1 | 3 day(s) | Personal leave | APPROVED -> balance 21
+  OK       Ravi Kumar #1 | 3 day(s) | Personal leave | APPROVED -> balance 9
+  REJECTED Meera Nair Intern employees can take at most 2 days per request (requested 3).
+  OK       Kiran Das  #1 | 3 day(s) | Personal leave | APPROVED -> balance 27
+
+=== 3. Rule violations are rejected with clear messages ===
+  REJECTED Asha Rao   Full-Time employees can take at most 10 days per request (requested 11).
+  REJECTED Ravi Kumar Part-Time employees can take at most 5 days per request (requested 6).
+  REJECTED Meera Nair Intern employees can take at most 2 days per request (requested 3).
+  OK       Kiran Das  #2 | 14 day(s) | Sabbatical | APPROVED -> balance 13
+  REJECTED Asha Rao   Number of days must be at least 1 (got 0).
+  REJECTED Asha Rao   A reason is required.
+  OK       Meera Nair #1 | 2 day(s) | Fever | APPROVED -> balance 4
+  OK       Meera Nair #2 | 2 day(s) | Fever | APPROVED -> balance 2
+  OK       Meera Nair #3 | 2 day(s) | Fever | APPROVED -> balance 0
+  REJECTED Meera Nair Not enough leave: requested 1 day(s) but only 0 available.
+
+=== 4. applyLeave(from, to, reason) - weekends are skipped ===
+  OK       Asha Rao   2026-10-09 to 2026-10-13 = #2 | 3 day(s) | Festival | APPROVED -> balance 18
+  REJECTED Asha Rao   2026-10-10 to 2026-10-11: The selected dates contain no working days.
+  REJECTED Asha Rao   2026-10-20 to 2026-10-19: End date 2026-10-19 is before start date 2026-10-20.
+
+=== 5. cancelLeave(requestId) ===
+  OK       Asha Rao   cancelled #1 | 3 day(s) | Personal leave | CANCELLED -> balance 21
+  REJECTED Asha Rao   Request #1 is already cancelled.
+  REJECTED Asha Rao   No leave request with id 99.
+
+=== 6. Request history of Asha Rao ===
+  #1 | 3 day(s) | Personal leave | CANCELLED
+  #2 | 3 day(s) | Festival | APPROVED
+
+=== 7. New leave year - carry-forward differs by type ===
+  Asha Rao   (Full-Time) balance before 21 -> carried  5 -> new balance 29
+  Ravi Kumar (Part-Time) balance before  9 -> carried  2 -> new balance 14
+  Meera Nair (Intern)   balance before  0 -> carried  0 -> new balance  6
+  Kiran Das  (Manager)  balance before 13 -> carried 10 -> new balance 40
+  REJECTED Asha Rao   Request #2 belongs to a closed leave year.
+
+=== 8. Final balances ===
+  Asha Rao   : 29 day(s)
+  Ravi Kumar : 14 day(s)
+  Meera Nair : 6 day(s)
+  Kiran Das  : 40 day(s)

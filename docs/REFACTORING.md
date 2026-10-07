@@ -14,11 +14,11 @@ Subclasses only supply two one-line hooks: `getMaxDaysPerRequest()` and `getCarr
 Zero copies of validation logic remain in subclasses.
 
 ## 2. Class responsibilities: model classes no longer print
-**Problem.** `Employee` and every subclass called `System.out.println` (15 calls in the model),
+**Problem.** `Employee` and every subclass called `System.out.println` (17 calls in the model),
 mixing business rules with user-interface output; results could not be tested or reused (GUI, web).
 **Fix.** Model methods now return values (`LeaveRequest`, `int`) or throw exceptions.
 All printing moved to `Main`. Date arithmetic moved out of `Employee` into `WorkingDayCalculator`.
-**Result.** `System.out` in model classes: 15 -> 1 (only the required `displayDetails()` method).
+**Result.** `System.out` in model classes: 17 -> 1 (only the required `displayDetails()` method).
 
 ## 3. Exception handling instead of boolean + printed message
 **Problem.** `applyLeave()` returned `false` after printing; callers could not tell *why* it failed.

@@ -1,0 +1,15 @@
+digraph D {
+  rankdir=TB; nodesep=0.5; ranksep=0.6; dpi=200;
+  node [shape=record, fontname="DejaVu Sans", fontsize=11, style=filled, fillcolor="#EAF1FB", color="#2F5597", margin="0.12,0.07"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#2F5597"];
+  Emp [label="{Employee|- employeeId\l- name\l- department\l- leaveBalance\l|+ applyLeave()\l+ cancelLeave()\l+ checkLeaveBalance()\l+ displayDetails()\l}"];
+  FT  [label="{FullTimeEmployee|(own leave rules)\l}"];
+  PT  [label="{PartTimeEmployee|(own leave rules)\l}"];
+  IN  [label="{Intern|(own leave rules)\l}"];
+  LR  [label="{LeaveRequest|- requestId\l- days\l- reason\l- status\l}", fillcolor="#E8F5E9", color="#2E7D32"];
+  FT -> Emp [arrowhead=empty, label=" is-a"];
+  PT -> Emp [arrowhead=empty];
+  IN -> Emp [arrowhead=empty];
+  Emp -> LR [arrowhead=none, arrowtail=diamond, dir=both, label=" has 0..*"];
+  {rank=same; FT; PT; IN;}
+}
