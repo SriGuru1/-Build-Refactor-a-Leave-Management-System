@@ -1,51 +1,46 @@
-# Leave Management System (Java, OOP)
+# 🏢 Leave Management System (LMS)
 
-A console application that stores employees, handles leave requests, and applies different
-leave rules per employee type. Built step by step (8 commits) and then refactored.
+[![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean%20OOP%20%26%20SOLID-blue?style=for-the-badge)](https://en.wikipedia.org/wiki/SOLID)
+[![Version Control](https://img.shields.io/badge/Git-8%20Progressive%20Commits-F05032?style=for-the-badge&logo=git&logoColor=white)](https://github.com/SriGuru1/-Build-Refactor-a-Leave-Management-System)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)](#-compilation--execution)
 
-**Author:** Sri Guru H G - RNS Institute of Technology, Bengaluru
-**GitHub:** https://github.com/<your-username>/leave-management-system
+> A modular Java application designed and progressively refactored using core **Object-Oriented Programming (OOP)** paradigms, **SOLID** design principles, custom domain exception safety, and clean software architecture.
 
-## Features
-- Employee with ID, name, department and leave balance
-- `applyLeave()` (3 overloads), `cancelLeave()`, `checkLeaveBalance()`, `displayDetails()`
-- Four employee types with different rules; weekend-aware date-range requests
-- New leave year with type-specific carry-forward
-- Custom checked exceptions with clear messages; 55 automated tests
+**GitHub Repository:** [https://github.com/SriGuru1/-Build-Refactor-a-Leave-Management-System](https://github.com/SriGuru1/-Build-Refactor-a-Leave-Management-System)
 
-## Leave rules
-| Type | Days / year | Max days per request | Carry-forward |
-|---|---|---|---|
-| FullTimeEmployee | 24 | 10 | 5 |
-| PartTimeEmployee | 12 | 5 | 2 |
-| Intern | 6 | 2 | 0 |
-| Manager (extends FullTime) | 24 + 6 bonus = 30 | 15 | 10 |
+---
 
-## Project structure
-```
-src/leavemgmt/   Employee (abstract), FullTimeEmployee, PartTimeEmployee, Intern, Manager,
-                 LeaveRequest, LeaveStatus, EmployeeType, WorkingDayCalculator,
-                 LeaveException + 3 subclasses, Main (demo), TestRunner (55 tests)
-docs/            design.md (initial design), REFACTORING.md, diagrams/ (class diagrams)
-sample_output/   demo_output.txt, test_results.txt (real captured output)
-```
+## 📋 Table of Contents
+1. [Project Overview & Scenario](#-project-overview--scenario)
+2. [System Architecture & UML Diagram](#-system-architecture--uml-diagram)
+3. [Employee Class Hierarchy & Leave Policies](#-employee-class-hierarchy--leave-policies)
+4. [Core OOP Concepts Applied](#-core-oop-concepts-applied)
+5. [Change Request: Manager Role](#-change-request-manager-role)
+6. [Debugging & Refactoring Notes](#-debugging--refactoring-notes)
+7. [Git Version Control & Commit Progression](#-git-version-control--commit-progression)
+8. [Directory Hierarchy](#-directory-hierarchy)
+9. [Compilation & Execution](#-compilation--execution)
+10. [Test Suite Execution & Sample Output](#-test-suite-execution--sample-output)
 
-## Build and run (JDK 8 or later)
-```
-javac -d out src/leavemgmt/*.java
-java -cp out leavemgmt.Main         # demo
-java -cp out leavemgmt.TestRunner   # 55 tests
-```
+---
 
-## OOP concepts used
-Encapsulation (private/final fields, read-only history), Inheritance (3 types + Manager),
-Polymorphism (one `List<Employee>`, four behaviours), Abstraction (abstract `Employee`, abstract hooks),
-Method overriding (`getMaxDaysPerRequest`, `getCarryForwardLimit`, `getBenefitNote`),
-Method overloading (`applyLeave` x3), Access modifiers (public / protected / package-private / private).
-Details with code locations: see the PDF report and `docs/REFACTORING.md`.
+## 📌 Project Overview & Scenario
 
-## Publish to GitHub
-```
-git remote add origin https://github.com/<your-username>/leave-management-system.git
-git push -u origin main
-```
+### Problem Statement
+Organizations require a structured system to track employee leave entitlements, manage leave requests and cancellations, and apply distinct leave policies tailored to different employment categories (Full-Time, Part-Time, Interns, and Managers).
+
+### Solution
+This application provides an enterprise-ready, modular system that:
+- Encapsulates employee identity, departments, and balances.
+- Provides atomic leave operations (`applyLeave`, `cancelLeave`, `checkLeaveBalance`, `displayDetails`).
+- Implements role-specific leave constraints and pro-rata calculations.
+- Seamlessly accommodates change requests (adding `Manager`) following the **Open-Closed Principle (OCP)**.
+- Replaces silent failures with robust custom domain exceptions.
+- Separates presentation and directory tracking into a dedicated Service Layer (**Single Responsibility Principle**).
+
+---
+
+## 🏛️ System Architecture & UML Diagram
+
+### Class Hierarchy Architecture
